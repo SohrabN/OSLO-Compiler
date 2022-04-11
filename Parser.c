@@ -142,7 +142,7 @@ oslo_null printError() {
 oslo_null program() {
 	switch (lookahead.code) {
 	case MNID_T:
-		if (strncmp(lookahead.attribute.idLexeme, "MAIN&", 5) == 0) {
+		if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
 			matchToken(MNID_T, NO_ATTR);
 			matchToken(LBR_T, NO_ATTR);
 			dataSession();
@@ -171,10 +171,10 @@ oslo_null program() {
  ***********************************************************
  */
 oslo_null dataSession() {
-	matchToken(KW_T, DATA);
-	matchToken(LBR_T, NO_ATTR);
+	/*matchToken(KW_T, DATA);
+	matchToken(LBR_T, NO_ATTR);*/
 	optVarListDeclarations();
-	matchToken(RBR_T, NO_ATTR);
+	//matchToken(RBR_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Data Session parsed");
 }
 
@@ -187,8 +187,11 @@ oslo_null dataSession() {
  */
 oslo_null optVarListDeclarations() {
 	switch (lookahead.code) {
-	default:
-		; // Empty
+		case VID_T:
+			varListDeclarations();
+			break;
+		default:
+			; // Empty
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Optional Variable List Declarations parsed");
 }
@@ -201,10 +204,10 @@ oslo_null optVarListDeclarations() {
  ***********************************************************
  */
 oslo_null codeSession() {
-	matchToken(KW_T, CODE);
-	matchToken(LBR_T, NO_ATTR);
+	/*matchToken(KW_T, CODE);
+	matchToken(LBR_T, NO_ATTR);*/
 	optionalStatements();
-	matchToken(RBR_T, NO_ATTR);
+	//matchToken(RBR_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Code Session parsed");
 }
 
