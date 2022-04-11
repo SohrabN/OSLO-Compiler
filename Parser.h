@@ -40,49 +40,57 @@
 
 /* Global vars */
 static Token lookahead;
-sofia_int syntaxErrorNumber = 0;
+oslo_int syntaxErrorNumber = 0;
 extern Buffer* stringLiteralTable;
-extern sofia_int line;
+extern oslo_int line;
 extern Token tokenizer();
-extern sofia_chr* keywordTable[];
+extern oslo_char* keywordTable[];
 
-#define STR_LANGNAME "Sofia"
+#define STR_LANGNAME "Oslo"
 
 /* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
 
 /* Constants */
 enum KEYWORDS {
 	NO_ATTR = -1,
-	DATA,
-	CODE,
-	INT,
-	FLOAT,
-	STRING,
+	AND,
+	BREAK,
+	DEF,
 	IF,
-	THEN,
+	ELIF,
 	ELSE,
+	FALSE,
+	FOR,
+	FROM,
+	IMPORT,
+	is,
+	NONE,
+	NOT,
+	OR,
+	RETURN,
+	TRUE,
 	WHILE,
-	DO
+	INT
 };
 
 /* Function definitions */
-sofia_nul startParser();
-sofia_nul matchToken(sofia_int, sofia_int);
-sofia_nul syncErrorHandler(sofia_int);
-sofia_nul printError();
+oslo_null startParser();
+oslo_null matchToken(oslo_int, oslo_int);
+oslo_null syncErrorHandler(oslo_int);
+oslo_null printError();
 
 /* TODO: Place ALL non-terminal function declarations */
-sofia_nul assignmentExpression();
-sofia_nul assignmentStatement();
-sofia_nul codeSession();
-sofia_nul dataSession();
-sofia_nul optVarListDeclarations();
-sofia_nul optionalStatements();
-sofia_nul outputStatement();
-sofia_nul outputVariableList();
-sofia_nul program();
-sofia_nul statement();
-sofia_nul statements();
-sofia_nul statementsPrime();
+oslo_null assignmentExpression();
+oslo_null assignmentStatement();
+oslo_null codeSession();
+oslo_null dataSession();
+oslo_null optVarListDeclarations();
+oslo_null optionalStatements();
+oslo_null outputStatement();
+oslo_null outputVariableList();
+oslo_null program();
+oslo_null statement();
+oslo_null statements();
+oslo_null statementsPrime();
 
 #endif

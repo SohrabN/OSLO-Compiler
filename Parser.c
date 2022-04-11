@@ -38,7 +38,7 @@
  */
 /* TODO: This is the function to start the parser - check your program definition */
 
-sofia_nul startParser() {
+oslo_null startParser() {
 	lookahead = tokenizer();
 	if (lookahead.code != SEOF_T) {
 		program();
@@ -54,8 +54,8 @@ sofia_nul startParser() {
  ***********************************************************
  */
 /* TODO: This is the main code for match - check your definition */
-sofia_nul matchToken(sofia_int tokenCode, sofia_int tokenAttribute) {
-	sofia_int matchFlag = 1;
+oslo_null matchToken(oslo_int tokenCode, oslo_int tokenAttribute) {
+	oslo_int matchFlag = 1;
 	switch (lookahead.code) {
 	case KW_T:
 	default:
@@ -82,7 +82,7 @@ sofia_nul matchToken(sofia_int tokenCode, sofia_int tokenAttribute) {
  ***********************************************************
  */
 /* TODO: This is the function to handler error - adjust basically datatypes */
-sofia_nul syncErrorHandler(sofia_int syncTokenCode) {
+oslo_null syncErrorHandler(oslo_int syncTokenCode) {
 	printError();
 	syntaxErrorNumber++;
 	while (lookahead.code != syncTokenCode) {
@@ -100,7 +100,7 @@ sofia_nul syncErrorHandler(sofia_int syncTokenCode) {
  ***********************************************************
  */
 /* TODO: This is the function to error printing - adjust basically datatypes */
-sofia_nul printError() {
+oslo_null printError() {
 	Token t = lookahead;
 	printf("%s%s%3d\n", STR_LANGNAME, ": Syntax error:  Line:", line);
 	printf("*****  Token code:%3d Attribute: ", t.code);
@@ -139,7 +139,7 @@ sofia_nul printError() {
  * FIRST(<program>)= {KW_T (MAIN)}.
  ***********************************************************
  */
-sofia_nul program() {
+oslo_null program() {
 	switch (lookahead.code) {
 	case MNID_T:
 		if (strncmp(lookahead.attribute.idLexeme, "MAIN&", 5) == 0) {
@@ -170,7 +170,7 @@ sofia_nul program() {
  * FIRST(<program>)= {KW_T (DATA)}.
  ***********************************************************
  */
-sofia_nul dataSession() {
+oslo_null dataSession() {
 	matchToken(KW_T, DATA);
 	matchToken(LBR_T, NO_ATTR);
 	optVarListDeclarations();
@@ -185,7 +185,7 @@ sofia_nul dataSession() {
  * FIRST(<opt_varlist_declarations>) = { e, KW_T (INT), KW_T (FLOAT), KW_T (STRING)}.
  ***********************************************************
  */
-sofia_nul optVarListDeclarations() {
+oslo_null optVarListDeclarations() {
 	switch (lookahead.code) {
 	default:
 		; // Empty
@@ -200,7 +200,7 @@ sofia_nul optVarListDeclarations() {
  * FIRST(<codeSession>)= {KW_T (CODE)}.
  ***********************************************************
  */
-sofia_nul codeSession() {
+oslo_null codeSession() {
 	matchToken(KW_T, CODE);
 	matchToken(LBR_T, NO_ATTR);
 	optionalStatements();
@@ -218,7 +218,7 @@ sofia_nul codeSession() {
  *				KW_T(WHILE), KW_T(READ), KW_T(WRITE) }
  ***********************************************************
  */
-sofia_nul optionalStatements() {
+oslo_null optionalStatements() {
 	switch (lookahead.code) {
 	case MNID_T:
 		if ((strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0)) {
@@ -239,7 +239,7 @@ sofia_nul optionalStatements() {
  *		KW_T(WHILE), KW_T(READ), KW_T(WRITE) }
  ***********************************************************
  */
-sofia_nul statements() {
+oslo_null statements() {
 	statement();
 	statementsPrime();
 	printf("%s%s\n", STR_LANGNAME, ": Statements parsed");
@@ -253,7 +253,7 @@ sofia_nul statements() {
  *		KW_T(IF), KW_T(WHILE), KW_T(READ), KW_T(WRITE) }
  ***********************************************************
  */
-sofia_nul statementsPrime() {
+oslo_null statementsPrime() {
 	switch (lookahead.code) {
 	case MNID_T:
 		if ((strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0)) {
@@ -274,7 +274,7 @@ sofia_nul statementsPrime() {
  *			KW_T(READ), KW_T(WRITE) }
  ***********************************************************
  */
-sofia_nul statement() {
+oslo_null statement() {
 	switch (lookahead.code) {
 	case KW_T:
 		switch (lookahead.attribute.codeType) {
@@ -301,7 +301,7 @@ sofia_nul statement() {
  *		KW_T(WHILE), KW_T(READ), KW_T(WRITE) }
  ***********************************************************
  */
-sofia_nul assignmentStatement() {
+oslo_null assignmentStatement() {
 	assignmentExpression();
 	matchToken(EOS_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Assignment statement parsed");
@@ -317,7 +317,7 @@ sofia_nul assignmentStatement() {
  * FIRST(<assignment expression>) = { IVID_T, FVID_T, SVID_T }
  ***********************************************************
  */
-sofia_nul assignmentExpression() {
+oslo_null assignmentExpression() {
 	switch (lookahead.code) {
 	default:
 		printError();
@@ -332,7 +332,7 @@ sofia_nul assignmentExpression() {
  * FIRST(<output statement>) = { KW_T(WRITE) }
  ***********************************************************
  */
-sofia_nul outputStatement() {
+oslo_null outputStatement() {
 	matchToken(MNID_T, NO_ATTR);
 	matchToken(LPR_T, NO_ATTR);
 	outputVariableList();
@@ -348,7 +348,7 @@ sofia_nul outputStatement() {
  * FIRST(<opt_variable_list>) = { IVID_T, FVID_T, SVID_T, ϵ }
  ***********************************************************
  */
-sofia_nul outputVariableList() {
+oslo_null outputVariableList() {
 	switch (lookahead.code) {
 	case STR_T:
 		matchToken(STR_T, NO_ATTR);
