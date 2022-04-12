@@ -223,11 +223,13 @@ oslo_null codeSession() {
  */
 oslo_null optionalStatements() {
 	switch (lookahead.code) {
+	case KW_T:
+		//if (lookahead.attribute.codeType == ) {
+		statements();
+		break;
 	case MNID_T:
-		if ((strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0)) {
-			statements();
-			break;
-		}
+		statements();
+		//}
 	default:
 		; // Empty
 	}
