@@ -68,11 +68,11 @@
 /* Global objects - variables */
 static BufferPointer sourceBuffer; /* pointer to input (source) buffer */
 BufferPointer stringLiteralTable; /* This buffer is used as a repository for string literals */
-sofia_int errorNumber;     /* Run-time error number = 0 by default (ANSI) */
+oslo_int errorNumber;     /* Run-time error number = 0 by default (ANSI) */
 
 /* External objects */
-extern sofia_int syntaxErrorNumber /* number of syntax errors reported by the parser */;
-extern sofia_int line; /* source code line number - defined in scanner.c */
+extern oslo_int syntaxErrorNumber /* number of syntax errors reported by the parser */;
+extern oslo_int line; /* source code line number - defined in scanner.c */
 
 /*
  * -------------------------------------------------------------
@@ -81,13 +81,13 @@ extern sofia_int line; /* source code line number - defined in scanner.c */
  */
 
 /* Function declarations (prototypes) */
-extern sofia_nul startParser(void);
-extern sofia_int startScanner(BufferPointer sc_buf);
+extern oslo_null startParser(void);
+extern oslo_int startScanner(BufferPointer sc_buf);
 
-static sofia_nul printParserError(char* fmt, ...);
-static sofia_nul displayParser(BufferPointer ptrBuffer);
-static sofia_lng getParserFileSize(char* fname);
-static sofia_nul callGarbageCollector(void);
+static oslo_null printParserError(char* fmt, ...);
+static oslo_null displayParser(BufferPointer ptrBuffer);
+static oslo_long getParserFileSize(char* fname);
+static oslo_null callGarbageCollector(void);
 
 
 /*
@@ -100,7 +100,7 @@ static sofia_nul callGarbageCollector(void);
 ***********************************************************
 */
 
-sofia_int mainParser(sofia_int argc, sofia_chr** argv) {
+oslo_int mainParser(oslo_int argc, oslo_char** argv) {
 
 	FILE* fi;       /* input file handle */
 	int loadsize = 0; /*the size of the file loaded in the buffer */
@@ -181,12 +181,12 @@ sofia_int mainParser(sofia_int argc, sofia_chr** argv) {
 ************************************************************
 */
 
-sofia_nul printParserError(sofia_chr* fmt, ...) {
+oslo_null printParserError(oslo_char* fmt, ...) {
 
 	va_list ap;
 	va_start(ap, fmt);
 
-	(sofia_nul)vfprintf(stderr, fmt, ap);
+	(oslo_null)vfprintf(stderr, fmt, ap);
 	va_end(ap);
 
 	/* Move to new line */
@@ -204,9 +204,9 @@ sofia_nul printParserError(sofia_chr* fmt, ...) {
 ************************************************************
 */
 
-sofia_lng getParserFileSize(sofia_chr* fname) {
+oslo_long getParserFileSize(oslo_char* fname) {
 	FILE* input;
-	sofia_lng flength;
+	oslo_long flength;
 	input = fopen(fname, "r");
 	if (input == NULL) {
 		printParserError("%s%s", "Cannot open file: ", fname);
@@ -226,7 +226,7 @@ sofia_lng getParserFileSize(sofia_chr* fname) {
 ************************************************************
 */
 
-sofia_nul displayParser(Buffer* ptrBuffer) {
+oslo_null displayParser(Buffer* ptrBuffer) {
 	printf("\nPrinting input buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n", bGetSize(ptrBuffer));
 	printf("The current size of the buffer is:  %d\n", bGetWritePos(ptrBuffer));
@@ -242,7 +242,7 @@ sofia_nul displayParser(Buffer* ptrBuffer) {
 ************************************************************
 */
 
-sofia_nul callGarbageCollector(sofia_nul) {
+oslo_null callGarbageCollector(oslo_null) {
 	if (syntaxErrorNumber)
 		printf("\nSyntax errors: %d\n", syntaxErrorNumber);
 	printf("\nCollecting garbage...\n");

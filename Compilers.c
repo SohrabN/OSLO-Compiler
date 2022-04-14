@@ -61,13 +61,13 @@ oslo_int main(int argc, char** argv) {
 		break;
 	case PGM_SCANNER:
 		
-		mainScanner(argc, argv);
+		//mainScanner(argc, argv);
 		
 		break;
 	case PGM_PARSER:
-		/*
+		
 		mainParser(argc, argv);
-		*/
+		
 		break;
 	default:
 		printf("%s%s%c%s%c%s%c%s", argv[0], ": OPTIONS [",

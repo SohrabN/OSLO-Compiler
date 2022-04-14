@@ -141,9 +141,13 @@ oslo_null printError() {
  */
 oslo_null program() {
 	switch (lookahead.code) {
+	/*case KW_T:
+		if (strncmp(lookahead.attribute.idLexeme, "def", 3) != 0) {
+			break;
+		}*/
 	case MNID_T:
 		if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
-			matchToken(MNID_T, NO_ATTR);
+			matchToken(MNID_T, LBR_T);
 			matchToken(LBR_T, NO_ATTR);
 			dataSession();
 			codeSession();
@@ -195,6 +199,35 @@ oslo_null optVarListDeclarations() {
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Optional Variable List Declarations parsed");
 }
+
+oslo_null varListDeclarations() {
+	varListDeclaration();
+	varListDeclarationsPrime();
+	printf("%s%s\n", STR_LANGNAME, ": Variable Lists Declarations parsed");
+}
+
+oslo_null varListDeclaration() {
+	switch (lookahead.code) {
+	case VID_T:
+		matchToken(VID_T, NO_ATTR);
+		break;
+	default:
+		printError();
+	}
+}
+
+oslo_null varListDeclarationsPrime() {
+	switch (lookahead.code) {
+	case VID_T:
+		varListDeclaration();
+		varListDeclarationsPrime();
+		break;
+
+	default:
+		; //empty string
+	}
+}
+
 
 /*
  ************************************************************
@@ -261,10 +294,10 @@ oslo_null statements() {
 oslo_null statementsPrime() {
 	switch (lookahead.code) {
 	case MNID_T:
-		if ((strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0)) {
+		//if ((strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0)) {
 			statements();
 			break;
-		}
+		//}
 	default:
 		; //empty string
 	}
@@ -288,9 +321,9 @@ oslo_null statement() {
 		}
 		break;
 	case MNID_T:
-		if (strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0) {
+		//if (strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0) {
 			outputStatement();
-		}
+		//}
 		break;
 	default:
 		printError();
@@ -324,10 +357,133 @@ oslo_null assignmentStatement() {
  */
 oslo_null assignmentExpression() {
 	switch (lookahead.code) {
+	case VID_T:
+		arithmeticExpression();
+		stringExpression();
 	default:
 		printError();
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Assignment expression parsed");
+}
+
+oslo_null arithmeticExpression() {
+	switch (lookahead.code) {
+	case ART_OP_T:
+		switch (lookahead.attribute.codeType) {
+		case OP_ADD:
+			matchToken(ART_OP_T, OP_ADD);
+			break;
+		case OP_SUB:
+			matchToken(ART_OP_T, OP_SUB);
+			break;
+		default:
+			printError();
+		}
+		primaryArithmeticExpression();
+		break;
+	case LPR_T:
+	case VID_T:
+	case LS_T:
+		additiveArithmeticExpression();
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ": Arithmetic expression parsed");
+}
+
+oslo_null primaryArithmeticExpression() {
+	switch (lookahead.code) {
+	case LS_T:
+		arithmeticExpression();
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ": primary arithmetic expression parsed");
+}
+oslo_null additiveArithmeticExpression() {
+	multiplicativeArithmeticExpression();
+	additiveArithmeticExpressionPrime();
+	printf("%s%s\n", STR_LANGNAME, ": Additive arithmetic expression parsed");
+}
+
+oslo_null additiveArithmeticExpressionPrime() {
+	switch (lookahead.code) {
+	case ART_OP_T:
+		switch (lookahead.attribute.codeType) {
+		case OP_ADD:
+			matchToken(ART_OP_T, OP_ADD);
+			break;
+		case OP_SUB:
+			matchToken(ART_OP_T, OP_SUB);
+			break;
+		default:
+			;
+		}
+	}
+	printf("%s%s\n", STR_LANGNAME, ": additive Arithmetic Expression Prime parsed");
+}
+oslo_null multiplicativeArithmeticExpression() {
+	switch (lookahead.code) {
+	case LPR_T:
+	case VID_T:
+	case LS_T:
+		primaryArithmeticExpression();
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ":  multiplicative Arithmetic Expression parsed");
+}
+oslo_null multiplicativeArithmeticExpressionPrime() {
+	switch (lookahead.code) {
+	case ART_OP_T:
+		switch (lookahead.attribute.codeType) {
+		case OP_MUL:
+			matchToken(ART_OP_T, OP_MUL);
+			break;
+		case OP_DIV:
+			matchToken(ART_OP_T, OP_DIV);
+			break;
+		default:
+			;
+		}
+	}
+	printf("%s%s\n", STR_LANGNAME, ": multiplicative Arithmetic Expression Prime parsed");
+}
+
+oslo_null stringExpression() {
+	primaryStringExpression();
+	stringExpressionPrime();
+	printf("%s%s\n", STR_LANGNAME, ": String expression parsed");
+}
+
+oslo_null stringExpressionPrime() {
+	switch (lookahead.code) {
+	case VID_T:
+		matchToken(VID_T, NO_ATTR);
+		break;
+	case STR_T:
+		matchToken(STR_T, NO_ATTR);
+		break;
+	default:
+		;
+	}
+}
+
+oslo_null primaryStringExpression() {
+	switch (lookahead.code) {
+	case VID_T:
+		matchToken(VID_T, NO_ATTR);
+		break;
+	case STR_T:
+		matchToken(STR_T, NO_ATTR);
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ": primary string expression parsed");
 }
 
 /*

@@ -560,15 +560,9 @@ Token funcMID(oslo_char lexeme[]) {
 		{
 			i++;
 		}
-		/*oslo_char* tempPtr = (oslo_char*)malloc(i * sizeof(oslo_char));
-		for (size_t j = 0; j <= i; j++)
-		{
-			tempPtr[j] = lexeme[j];
-		}
-		tempPtr[i] = '\0';*/
+		
 		currentToken = funcKEY(lexeme);
 		if (currentToken.code == ERR_T) {
-			//printf("temp is %s\ni is %zu\n", tempPtr, i);
 			currentToken.code = MNID_T;
 			if (firstPerentesis < VID_LEN)
 			{
@@ -835,11 +829,11 @@ Token funcKEY(oslo_char lexeme[]) {
 
 		currentToken.code = KW_T;
 		currentToken.attribute.codeType = kwindex;
+		//strcpy(currentToken.attribute.idLexeme, lexeme);
 	}
 	else {
 		currentToken = funcVID(lexeme);
 		if (currentToken.code == ERR_T) {
-			//printf("here\n");
 			currentToken = funcErr(lexeme);
 		}
 		return currentToken;
