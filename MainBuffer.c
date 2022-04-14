@@ -71,7 +71,7 @@ void startBuffer(char*, char*, char, short, int);
 ************************************************************
 */
 
-sofia_int mainBuffer(sofia_int argc, sofia_chr** argv) {
+oslo_int mainBuffer(oslo_int argc, oslo_char** argv) {
 
 	int isAnsiC = !ANSI_C;		/* ANSI C flag */
 	short size = 0, increment = 0, wrongNumber = 0;

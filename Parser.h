@@ -92,5 +92,15 @@ oslo_null program();
 oslo_null statement();
 oslo_null statements();
 oslo_null statementsPrime();
-
+oslo_null arithmeticExpression();
+oslo_null stringExpression();
+oslo_null primaryStringExpression();
+oslo_null stringExpressionPrime();
+oslo_null varListDeclarations();
+oslo_null varListDeclaration();
+oslo_null varListDeclarationsPrime();
+oslo_null primaryArithmeticExpression();
+oslo_null additiveArithmeticExpression();
+oslo_null multiplicativeArithmeticExpression();
+oslo_null additiveArithmeticExpressionPrime();
 #endif
