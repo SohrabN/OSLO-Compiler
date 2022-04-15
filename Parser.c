@@ -36,7 +36,7 @@
  * Process Parser
  ***********************************************************
  */
-/* TODO: This is the function to start the parser - check your program definition */
+ /* TODO: This is the function to start the parser - check your program definition */
 
 oslo_null startParser() {
 	lookahead = tokenizer();
@@ -53,7 +53,7 @@ oslo_null startParser() {
  * Match Token
  ***********************************************************
  */
-/* TODO: This is the main code for match - check your definition */
+ /* TODO: This is the main code for match - check your definition */
 oslo_null matchToken(oslo_int tokenCode, oslo_int tokenAttribute) {
 	oslo_int matchFlag = 1;
 	switch (lookahead.code) {
@@ -81,7 +81,7 @@ oslo_null matchToken(oslo_int tokenCode, oslo_int tokenAttribute) {
  * Syncronize Error Handler
  ***********************************************************
  */
-/* TODO: This is the function to handler error - adjust basically datatypes */
+ /* TODO: This is the function to handler error - adjust basically datatypes */
 oslo_null syncErrorHandler(oslo_int syncTokenCode) {
 	printError();
 	syntaxErrorNumber++;
@@ -99,7 +99,7 @@ oslo_null syncErrorHandler(oslo_int syncTokenCode) {
  * Print Error
  ***********************************************************
  */
-/* TODO: This is the function to error printing - adjust basically datatypes */
+ /* TODO: This is the function to error printing - adjust basically datatypes */
 oslo_null printError() {
 	Token t = lookahead;
 	printf("%s%s%3d\n", STR_LANGNAME, ": Syntax error:  Line:", line);
@@ -140,22 +140,26 @@ oslo_null printError() {
  ***********************************************************
  */
 oslo_null program() {
-	switch (lookahead.code) {
+	switch (lookahead.code) 
+	{
 	case KW_T:
-		matchToken(KW_T, LBR_T);
-	case MNID_T:
-		if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
-			matchToken(MNID_T, LPR_T);
-			matchToken(LPR_T, NO_ATTR);
-			matchToken(RPR_T, NO_ATTR);
-			matchToken(LBR_T, NO_ATTR);
-			dataSession();
-			codeSession();
-			
-			break;
-		}
-		else {
-			printError();
+		if (lookahead.attribute.codeType == 2) 
+		{
+			matchToken(KW_T, LBR_T);
+			case MNID_T:
+				if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
+					matchToken(MNID_T, LPR_T);
+					matchToken(LPR_T, NO_ATTR);
+					matchToken(RPR_T, NO_ATTR);
+					matchToken(LBR_T, NO_ATTR);
+					dataSession();
+					codeSession();
+
+					break;
+				}
+				else {
+					printError();
+				}
 		}
 	case SEOF_T:
 		; // Empty
@@ -191,11 +195,11 @@ oslo_null dataSession() {
  */
 oslo_null optVarListDeclarations() {
 	switch (lookahead.code) {
-		case VID_T:
-			varListDeclarations();
-			break;
-		default:
-			; // Empty
+	case VID_T:
+		varListDeclarations();
+		break;
+	default:
+		; // Empty
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Optional Variable List Declarations parsed");
 }
@@ -287,7 +291,7 @@ oslo_null statements() {
  ************************************************************
  * Statements Prime
  * BNF: <statementsPrime>  <statement><statementsPrime> | ϵ
- * FIRST(<statementsPrime>) = { ϵ , IVID_T, FVID_T, SVID_T, 
+ * FIRST(<statementsPrime>) = { ϵ , IVID_T, FVID_T, SVID_T,
  *		KW_T(IF), KW_T(WHILE), KW_T(READ), KW_T(WRITE) }
  ***********************************************************
  */
@@ -295,8 +299,8 @@ oslo_null statementsPrime() {
 	switch (lookahead.code) {
 	case MNID_T:
 		//if ((strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0)) {
-			statements();
-			break;
+		statements();
+		break;
 		//}
 	default:
 		; //empty string
@@ -322,7 +326,7 @@ oslo_null statement() {
 		break;
 	case MNID_T:
 		//if (strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0) {
-			outputStatement();
+		outputStatement();
 		//}
 		break;
 	default:
