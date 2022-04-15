@@ -141,22 +141,20 @@ oslo_null printError() {
  */
 oslo_null program() {
 	switch (lookahead.code) {
-	/*case KW_T:
-		if (strncmp(lookahead.attribute.idLexeme, "def", 3) != 0) {
-			break;
-		}*/
+	case KW_T:
+		matchToken(KW_T, LBR_T);
 	case MNID_T:
-		if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
-			matchToken(MNID_T, LBR_T);
-			matchToken(LBR_T, NO_ATTR);
+		//if (strncmp(lookahead.attribute.idLexeme, "main()", 6) == 0) {
+			matchToken(MNID_T, LPR_T);
+			matchToken(LPR_T, NO_ATTR);
 			dataSession();
 			codeSession();
-			matchToken(RBR_T, NO_ATTR);
+			matchToken(RPR_T, NO_ATTR);
 			break;
-		}
+		/*}
 		else {
 			printError();
-		}
+		}*/
 	case SEOF_T:
 		; // Empty
 		break;

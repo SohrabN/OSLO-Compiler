@@ -91,7 +91,7 @@ oslo_int mainScanner(oslo_int argc, oslo_char** argv) {
 
 	BufferPointer sourceBuffer;		/* Pointer to input (source) buffer */
 	FILE* fileHandler;				/* Input file handle */
-	Token currentToken;				/* Token produced by the scanner */
+	Token currentToken={0};			/* Token produced by the scanner */
 	oslo_int loadSize = 0;			/* The size of the file loaded in the buffer */
 
 	/* Check for correct arrguments - source file name */

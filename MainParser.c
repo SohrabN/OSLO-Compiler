@@ -100,7 +100,7 @@ static oslo_null callGarbageCollector(void);
 ***********************************************************
 */
 
-oslo_int mainParser(oslo_int argc, oslo_char** argv) {
+oslo_int mainParser(oslo_int argc, oslo_int** argv) {
 
 	FILE* fi;       /* input file handle */
 	int loadsize = 0; /*the size of the file loaded in the buffer */
@@ -181,7 +181,7 @@ oslo_int mainParser(oslo_int argc, oslo_char** argv) {
 ************************************************************
 */
 
-oslo_null printParserError(oslo_char* fmt, ...) {
+oslo_null printParserError(oslo_int* fmt, ...) {
 
 	va_list ap;
 	va_start(ap, fmt);
@@ -204,7 +204,7 @@ oslo_null printParserError(oslo_char* fmt, ...) {
 ************************************************************
 */
 
-oslo_long getParserFileSize(oslo_char* fname) {
+oslo_long getParserFileSize(oslo_int* fname) {
 	FILE* input;
 	oslo_long flength;
 	input = fopen(fname, "r");

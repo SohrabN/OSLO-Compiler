@@ -55,11 +55,11 @@
  *  Function declarations
  * -------------------------------------------------------------
  */
-void bErrorPrint(char* fmt, ...);
-void displayBuffer(Buffer* ptr_Buffer);
-long getFileSize(char* fname);
-int isNumber(const char* ns);
-void startBuffer(char*, char*, char, short, int);
+oslo_null bErrorPrint(oslo_char* fmt, ...);
+oslo_null displayBuffer(Buffer* ptr_Buffer);
+oslo_long getFileSize(oslo_char* fname);
+oslo_int isNumber(const oslo_char* ns);
+oslo_null startBuffer(oslo_char*, oslo_char*, oslo_char, oslo_int, oslo_int);
 
 /*
 ************************************************************
@@ -73,8 +73,12 @@ void startBuffer(char*, char*, char, short, int);
 
 oslo_int mainBuffer(oslo_int argc, oslo_char** argv) {
 
-	int isAnsiC = !ANSI_C;		/* ANSI C flag */
-	short size = 0, increment = 0, wrongNumber = 0;
+	/* Create source input buffer */
+	oslo_char* program = argv[0];
+	oslo_char* input = argv[2];
+	oslo_char mode = MODE_FIXED;
+	oslo_int isAnsiC = !ANSI_C;		/* ANSI C flag */
+	oslo_int size = 0, increment = 0, wrongNumber = 0;
 
 	/* Check if the compiler option is set to compile ANSI C */
 	/* __DATE__, __TIME__, __LINE__, __FILE__, __STDC__ are predefined preprocessor macros*/
@@ -86,7 +90,7 @@ oslo_int mainBuffer(oslo_int argc, oslo_char** argv) {
 	}
 	*/
 
-	/* missing file name or/and mode parameter */
+	/* Missing file name or/and mode parameter */
 	if (argc <= 2) {
 		bErrorPrint("\nDate: %s  Time: %s", __DATE__, __TIME__);
 		bErrorPrint("\nRuntime error at line %d in file %s\n", __LINE__, __FILE__);
@@ -94,11 +98,6 @@ oslo_int mainBuffer(oslo_int argc, oslo_char** argv) {
 		bErrorPrint("Usage: <Option=0> <SourceFile> [<Mode>]");
 		exit(EXIT_FAILURE);
 	}
-
-	/* create source input buffer */
-	char* program = argv[0];
-	char* input = argv[2];
-	char mode = MODE_FIXED;
 
 	if (argc == 4) {
 		mode = *argv[3];
@@ -110,7 +109,7 @@ oslo_int mainBuffer(oslo_int argc, oslo_char** argv) {
 			exit(EXIT_FAILURE);
 		}
 	}
-	/* read additional parameters, if any */
+	/* Read additional parameters, if any */
 	if (argc == 6) {
 		mode = *argv[3];
 		if (isNumber(argv[4]))size = (short)atoi(argv[4]); else wrongNumber = 1;
@@ -126,7 +125,7 @@ oslo_int mainBuffer(oslo_int argc, oslo_char** argv) {
 
 	startBuffer(program, input, mode, size, increment);
 
-	/*return success */
+	/* Return success */
 	return (EXIT_SUCCESS);
 }
 
@@ -141,14 +140,14 @@ oslo_int mainBuffer(oslo_int argc, oslo_char** argv) {
 *	- Increment: buffer increment.
 ************************************************************
 */
-void startBuffer(char* program, char* input, char mode, short size, int increment) {
+void startBuffer(oslo_char* program, oslo_char* input, oslo_char mode, oslo_int size, oslo_int increment) {
 
 	BufferPointer bufferp;		/* pointer to Buffer structure */
 	FILE* fileHandler;			/* input file handle */
-	int loadSize = 0;			/*the size of the file loaded in the buffer */
-	char symbol;				/*symbol read from input file */
+	oslo_int loadSize = 0;			/* the size of the file loaded in the buffer */
+	oslo_char symbol;				/* symbol read from input file */
 
-	/* create buffer */
+	/* Create buffer */
 	bufferp = bCreate(size, (char)increment, mode);
 
 	if (bufferp == NULL) {
@@ -158,17 +157,17 @@ void startBuffer(char* program, char* input, char mode, short size, int incremen
 		exit(1);
 	}
 
-	/* open source file */
+	/* Open source file */
 	if ((fileHandler = fopen(input, "r")) == NULL) {
 		bErrorPrint("%s%s%s", program, ": Cannot open file: ", input);
 		exit(1);
 	}
 
-	/* load source file into input buffer  */
+	/* Load source file into input buffer  */
 	printf("Reading file %s ....Please wait\n", input);
 	loadSize = bLoad(bufferp, fileHandler);
 
-	/* if the input file has not been completely loaded, find the file size and print the last symbol loaded */
+	/* If the input file has not been completely loaded, find the file size and print the last symbol loaded */
 	if (loadSize == BUFFER_ERROR) {
 		printf("The input file %s %s\n", input, "has not been completely loaded.");
 		printf("Current size of buffer: %d.\n", bGetSize(bufferp));
@@ -177,12 +176,11 @@ void startBuffer(char* program, char* input, char mode, short size, int incremen
 		printf("Input file size: %ld\n", getFileSize(input));
 	}
 
-	/* close source file */
+	/* Close source file */
 	fclose(fileHandler);
 
 	/*
-	 * Finishes the buffer: add end of file character (EOF) to the buffer
-	 * display again
+	 * Finishes the buffer: add end of file character (EOF) to the buffer display again
 	 */
 	if ((loadSize != BUFFER_ERROR) && (loadSize != 0)) {
 		if (!bAddChar(bufferp, BUFFER_EOF)) {
@@ -191,7 +189,7 @@ void startBuffer(char* program, char* input, char mode, short size, int incremen
 	}
 	displayBuffer(bufferp);
 
-	/* free the dynamic memory used by the buffer */
+	/* Free the dynamic memory used by the buffer */
 	bDestroy(bufferp);
 	bufferp = NULL;
 }
@@ -205,13 +203,12 @@ void startBuffer(char* program, char* input, char mode, short size, int incremen
 ************************************************************
 */
 
-void bErrorPrint(char* fmt, ...) {
-
+oslo_null bErrorPrint(oslo_char* fmt, ...) {
 	/* Initialize variable list */
 	va_list ap;
 	va_start(ap, fmt);
 
-	(void)vfprintf(stderr, fmt, ap);
+	(oslo_null)vfprintf(stderr, fmt, ap);
 	va_end(ap);
 
 	/* Move to new line */
@@ -226,8 +223,7 @@ void bErrorPrint(char* fmt, ...) {
 ************************************************************
 */
 
-void displayBuffer(Buffer* ptr_Buffer) {
-
+oslo_null displayBuffer(Buffer* ptr_Buffer) {
 	printf("\nPrinting buffer parameters:\n\n");
 	printf("The capacity of the buffer is:  %d\n",
 		bGetSize(ptr_Buffer));
@@ -245,7 +241,6 @@ void displayBuffer(Buffer* ptr_Buffer) {
 	bRecover(ptr_Buffer);
 	if (!bPrint(ptr_Buffer))
 		printf("Empty buffer\n");
-
 }
 
 /*
@@ -256,9 +251,9 @@ void displayBuffer(Buffer* ptr_Buffer) {
 ************************************************************
 */
 
-long getFileSize(char* fname) {
+oslo_long getFileSize(oslo_char* fname) {
 	FILE* input;
-	long flength;
+	oslo_long flength;
 	input = fopen(fname, "r");
 	if (input == NULL) {
 		bErrorPrint("%s%s", "Cannot open file: ", fname);
@@ -280,8 +275,8 @@ long getFileSize(char* fname) {
 ************************************************************
 */
 
-int isNumber(const char* ns) {
-	char c; int i = 0;
+oslo_int isNumber(const oslo_char* ns) {
+	oslo_char c; oslo_int i = 0;
 	if (ns == NULL) return 0;
 	while ((c = ns[i++]) == 0) {
 		if (!isdigit(c)) return 0;
