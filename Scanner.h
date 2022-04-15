@@ -43,29 +43,29 @@
 
 enum TOKENS {
 	ERR_T,		/*  0: Error token */
-	MNID_T,		/*  1: Method name identifier token (start: ()) */
+	MNID_T,		/*  1: Method name identifier token */
 	STR_T,		/*  2: String literal token */
 	LS_T,		/*	3: Literal value */
-	LPR_T,		/*  3: Left parenthesis token */
-	RPR_T,		/*  4: Right parenthesis token */
-	LBR_T,		/*  5: Left brace token */
-	RBR_T,		/*  6: Right brace token */
-	KW_T,		/*  7: Keyword token */
-	EOS_T,		/*  8: End of statement (\n) */
-	RTE_T,		/*  9: Run-time error token */
-	SEOF_T,		/* 10: Source end-of-file token */
-	SCC_OP_T,	/* 11: String concatenation operator token: (++) */
-	ASS_OP_T,	/* 12: Assignment operator token */
-	ART_OP_T,	/* 13: Arithmetic operator token */
-	REL_OP_T,	/* 14: Relational operator token */
-	LOG_OP_T,	/* 15: Logical operator token */
-	COM_T,		/* 16: Comma token */
-	VID_T,		/* 17: Variable token */
-	CID_T,		/* 18: Comment ID */
-	MINUS_T,
-	PLUS_T,
-	COLON_T,
-	NOT_T
+	LPR_T,		/*  4: Left parenthesis token */
+	RPR_T,		/*  5: Right parenthesis token */
+	LBR_T,		/*  6: Left brace token */
+	RBR_T,		/*  7: Right brace token */
+	KW_T,		/*  8: Keyword token */
+	EOS_T,		/*  9: End of statement (\n) */
+	RTE_T,		/* 10: Run-time error token */
+	SEOF_T,		/* 11: Source end-of-file token */
+	SCC_OP_T,	/* 12: String concatenation operator token: (++) */
+	ASS_OP_T,	/* 13: Assignment operator token */
+	ART_OP_T,	/* 14: Arithmetic operator token */
+	REL_OP_T,	/* 15: Relational operator token */
+	LOG_OP_T,	/* 16: Logical operator token */
+	COM_T,		/* 17: Comma token */
+	VID_T,		/* 18: Variable token */
+	CID_T,		/* 20: Comment ID */
+	MINUS_T,	/* 21: Minus token */
+	PLUS_T,		/* 22: Plus token */
+	COLON_T,	/* 23: Colon token */
+	NOT_T		/* 24: Not token (!) */
 
 };
 
@@ -266,24 +266,24 @@ Language keywords
 
 /* Define the list of keywords */
 static oslo_char* keywordTable[KWT_SIZE] = {
-	"and",
-	"break",
-	"def",
-	"if",
-	"elif",
-	"else",
-	"False",
-	"for",
-	"from",
-	"import",
-	"is",
-	"None",
-	"not",
-	"or",
-	"return",
-	"True",
-	"while",
-	"int"
+	"and",		//0
+	"break",	//1
+	"def",		//2
+	"if",		//3
+	"elif",		//4
+	"else",		//5
+	"False",	//6
+	"for",		//7
+	"from",		//8
+	"import",	//9
+	"is",		//10
+	"None",		//11
+	"not",		//12
+	"or",		//13
+	"return",	//14
+	"True",		//15
+	"while",	//16
+	"int"		//17
 };
 
 #endif

@@ -45,6 +45,8 @@ extern Buffer* stringLiteralTable;
 extern oslo_int line;
 extern Token tokenizer();
 extern oslo_char* keywordTable[];
+oslo_char variableTable[100][100];
+oslo_int variableCount = 0;
 
 #define STR_LANGNAME "Oslo"
 

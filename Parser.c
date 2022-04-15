@@ -155,7 +155,7 @@ oslo_null program() {
 		case KW_T:
 			if (lookahead.attribute.codeType == 2)
 			{
-				matchToken(KW_T, LBR_T);
+				matchToken(KW_T, NO_ATTR);
 		case MNID_T:
 			if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
 				matchToken(MNID_T, NO_ATTR);
@@ -183,7 +183,7 @@ oslo_null program() {
 	case KW_T:
 		if (lookahead.attribute.codeType == 2) 
 		{
-			matchToken(KW_T, LBR_T);
+			matchToken(KW_T, NO_ATTR);
 			case MNID_T:
 				if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
 					matchToken(MNID_T, NO_ATTR);
@@ -253,7 +253,35 @@ oslo_null varListDeclarations() {
 oslo_null varListDeclaration() {
 	switch (lookahead.code) {
 	case VID_T:
+		strcpy(variableTable[variableCount], lookahead.attribute.idLexeme);
+		variableCount++;
 		matchToken(VID_T, NO_ATTR);
+	case ASS_OP_T:
+		matchToken(ASS_OP_T, NO_ATTR);
+		switch (lookahead.code)
+		{
+		case KW_T:
+			if (lookahead.attribute.codeType == 11) {
+				matchToken(KW_T, NO_ATTR);
+				if (lookahead.code == EOS_T) {
+					matchToken(EOS_T, NO_ATTR);
+				}
+			}
+			break;
+		case LS_T:
+			matchToken(LS_T, NO_ATTR);
+			if (lookahead.code == EOS_T) {
+				matchToken(EOS_T, NO_ATTR);
+			}
+			break;
+		case STR_T:
+			matchToken(STR_T, NO_ATTR);
+			if (lookahead.code == EOS_T) {
+				matchToken(EOS_T, NO_ATTR);
+			}
+		default:
+			printError();
+		}
 		break;
 	default:
 		printError();
@@ -261,10 +289,22 @@ oslo_null varListDeclaration() {
 }
 
 oslo_null varListDeclarationsPrime() {
+	oslo_int found = 0;
 	switch (lookahead.code) {
 	case VID_T:
-		varListDeclaration();
-		varListDeclarationsPrime();
+		for (size_t i = 0; i < variableCount; i++)
+		{
+			//printf("variableTable is: %s\nlookahead.attribute.idLexeme is: %s\nCurrent count is: %d\n", variableTable[i], lookahead.attribute.idLexeme,variableCount);
+			if (strcmp(variableTable[i],lookahead.attribute.idLexeme)==0) {
+				found = 1;
+				break;
+			}
+		}
+		if (!found) {
+			varListDeclaration();
+			varListDeclarationsPrime();
+		}
+		//printf("idLexeme is %s\n",lookahead.attribute.idLexeme);
 		break;
 
 	default:
@@ -299,6 +339,7 @@ oslo_null codeSession() {
  ***********************************************************
  */
 oslo_null optionalStatements() {
+	//printf("lookahead.code in optionalStatements is %d \n", lookahead.code);
 	switch (lookahead.code) {
 	case KW_T:
 		//if (lookahead.attribute.codeType == ) {
@@ -306,6 +347,10 @@ oslo_null optionalStatements() {
 		break;
 	case MNID_T:
 		statements();
+		break;
+	case VID_T:
+		statements();
+		break;
 		//}
 	default:
 		; // Empty
@@ -342,6 +387,9 @@ oslo_null statementsPrime() {
 		statements();
 		break;
 		//}
+	case VID_T:
+		statements();
+		break;
 	default:
 		; //empty string
 	}
@@ -365,9 +413,58 @@ oslo_null statement() {
 		}
 		break;
 	case MNID_T:
-		//if (strncmp(lookahead.attribute.idLexeme, "WRITE&", 6) == 0) {
+		if (strncmp(lookahead.attribute.idLexeme, "print", 5) == 0) {
 		outputStatement();
-		//}
+		}
+		break;
+	case VID_T:
+		matchToken(VID_T, NO_ATTR);
+		matchToken(ASS_OP_T, NO_ATTR);
+		if (lookahead.code == LS_T) {
+			matchToken(LS_T, NO_ATTR);
+		}
+		//else if (lookahead.code==KW_T)
+		//{
+		//	if (lookahead.attribute.codeType == 17)
+		//	{
+		//		matchToken(KW_T, NO_ATTR);
+		//		if (lookahead.code == LPR_T)
+		//		{
+		//			matchToken(LPR_T, NO_ATTR);
+		//		}else
+		//			printError();
+		//		if (lookahead.code == MNID_T) {//THIS SHIFT IS NOT WORKING
+		//			if (strncmp(lookahead.attribute.idLexeme, "input", 5) == 0)
+		//				matchToken(MNID_T, NO_ATTR);
+		//			else
+		//				printError();
+		//			/*if (lookahead.code == LPR_T) {
+		//				matchToken(LPR_T, NO_ATTR);
+		//			}
+		//			else
+		//				printError();
+		//			if (lookahead.code == RPR_T) {
+		//				matchToken(RPR_T, NO_ATTR);
+		//			}
+		//			else
+		//				printError();
+		//			if (lookahead.code == RPR_T) {
+		//				matchToken(RPR_T, NO_ATTR);
+		//			}
+		//			else
+		//				printError();
+		//			if (lookahead.code == EOS_T)
+		//			{
+		//				matchToken(EOS_T, NO_ATTR);
+		//			}*/
+
+
+		//		}
+		//		
+		//		break;
+		//	}
+		//}else
+		//	printError();
 		break;
 	default:
 		printError();

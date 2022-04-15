@@ -777,6 +777,7 @@ Token funcCID(oslo_char lexeme[]) {
 	{
 		if (lexeme[len - 1] == '\n') {
 			currentToken.code = CID_T;
+			line++;
 			return currentToken;
 		}
 		else
