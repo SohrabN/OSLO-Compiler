@@ -57,6 +57,12 @@ oslo_null startParser() {
 oslo_null matchToken(oslo_int tokenCode, oslo_int tokenAttribute) {
 	oslo_int matchFlag = 1;
 	switch (lookahead.code) {
+	case CID_T:
+		while (lookahead.code == tokenCode) {
+			//printf("%s%s\n", STR_LANGNAME, ": Comment parsed");
+			lookahead = tokenizer();
+		}
+		break;
 	case KW_T:
 	default:
 		if (lookahead.code != tokenCode)
@@ -142,6 +148,38 @@ oslo_null printError() {
 oslo_null program() {
 	switch (lookahead.code) 
 	{
+	case CID_T:
+		matchToken(CID_T, NO_ATTR);
+		switch (lookahead.code)
+		{
+		case KW_T:
+			if (lookahead.attribute.codeType == 2)
+			{
+				matchToken(KW_T, LBR_T);
+		case MNID_T:
+			if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
+				matchToken(MNID_T, NO_ATTR);
+				matchToken(LPR_T, NO_ATTR);
+				matchToken(RPR_T, NO_ATTR);
+				matchToken(LBR_T, NO_ATTR);
+				if (lookahead.code == EOS_T)
+					matchToken(EOS_T, NO_ATTR);
+				dataSession();
+				codeSession();
+				matchToken(RBR_T, NO_ATTR);
+				break;
+			}
+			else {
+				printError();
+			}
+			}
+		case SEOF_T:
+			; // Empty
+			break;
+		default:
+			printError();
+		}
+		break;
 	case KW_T:
 		if (lookahead.attribute.codeType == 2) 
 		{
