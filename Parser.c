@@ -148,13 +148,15 @@ oslo_null program() {
 			matchToken(KW_T, LBR_T);
 			case MNID_T:
 				if (strncmp(lookahead.attribute.idLexeme, "main", 4) == 0) {
-					matchToken(MNID_T, LPR_T);
+					matchToken(MNID_T, NO_ATTR);
 					matchToken(LPR_T, NO_ATTR);
 					matchToken(RPR_T, NO_ATTR);
 					matchToken(LBR_T, NO_ATTR);
+					if (lookahead.code == EOS_T)
+						matchToken(EOS_T, NO_ATTR);
 					dataSession();
 					codeSession();
-
+					matchToken(RBR_T, NO_ATTR);
 					break;
 				}
 				else {
