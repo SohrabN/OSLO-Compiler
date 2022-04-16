@@ -1,0 +1,10 @@
+# OSLO Example (Volume of a sphere) @
+def main(){
+    PI = None
+    r = None
+    Vol = None
+    PI=3.14
+    r=int(input())
+    Vol = 4.0/3.0 * PI * (r*r*r)
+    print(Vol)
+}

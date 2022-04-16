@@ -1,0 +1,6 @@
+OSLO_A22:
+- Added space ' ' to our TT.
+- Added comma ',' to our TT.
+- Added AO (Arithmetic operators) to our lexme classes and TT.
+- Added 'int' as keyword to oslo.
+- Changed the syntax from using colon to using curly brackets for definition of function.
