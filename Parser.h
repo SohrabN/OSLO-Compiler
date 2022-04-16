@@ -2,7 +2,7 @@
 ************************************************************
 * COMPILERS COURSE - Algonquin College
 * Code version: Winter, 2022
-* Author: Svillen Ranev - Paulo Sousa
+* Author: Sohrab Najafzadeh
 * Professors: Paulo Sousa / George Kriger / Abdullah Kadri
 ************************************************************
 */
