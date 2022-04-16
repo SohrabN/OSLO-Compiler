@@ -59,7 +59,7 @@ oslo_null matchToken(oslo_int tokenCode, oslo_int tokenAttribute) {
 	switch (lookahead.code) {
 	case CID_T:
 		while (lookahead.code == tokenCode) {
-			//printf("%s%s\n", STR_LANGNAME, ": Comment parsed");
+			printf("%s%s\n", STR_LANGNAME, ": Comment parsed");
 			lookahead = tokenizer();
 		}
 		break;
@@ -71,7 +71,7 @@ oslo_null matchToken(oslo_int tokenCode, oslo_int tokenAttribute) {
 	if (matchFlag && lookahead.code == SEOF_T)
 		return;
 	if (matchFlag) {
-		printf("matched lookhead.code: %d\n", lookahead.code);
+		//printf("matched lookhead.code: %d\n", lookahead.code);
 		lookahead = tokenizer();
 		if (lookahead.code == ERR_T) {
 			printError();
@@ -220,10 +220,7 @@ oslo_null program() {
  ***********************************************************
  */
 oslo_null dataSession() {
-	/*matchToken(KW_T, DATA);
-	matchToken(LBR_T, NO_ATTR);*/
 	optVarListDeclarations();
-	//matchToken(RBR_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Data Session parsed");
 }
 
@@ -248,7 +245,7 @@ oslo_null optVarListDeclarations() {
 oslo_null varListDeclarations() {
 	varListDeclaration();
 	varListDeclarationsPrime();
-	printf("%s%s\n", STR_LANGNAME, ": Variable Lists Declarations parsed");
+	printf("%s%s\n", STR_LANGNAME, ": Variable List Declarations parsed");
 }
 
 oslo_null varListDeclaration() {
@@ -264,6 +261,7 @@ oslo_null varListDeclaration() {
 		case KW_T:
 			if (lookahead.attribute.codeType == 11) {
 				matchToken(KW_T, NO_ATTR);
+				printf("%s%s\n", STR_LANGNAME, ": Variable identifier parsed");
 				if (lookahead.code == EOS_T) {
 					matchToken(EOS_T, NO_ATTR);
 				}
@@ -287,24 +285,25 @@ oslo_null varListDeclaration() {
 	default:
 		printError();
 	}
+
 }
 
 oslo_null varListDeclarationsPrime() {
 	oslo_int found = 0;
 	switch (lookahead.code) {
 	case VID_T:
-		//for (size_t i = 0; i < variableCount; i++)
-		//{
-		//	//printf("variableTable is: %s\nlookahead.attribute.idLexeme is: %s\nCurrent count is: %d\n", variableTable[i], lookahead.attribute.idLexeme,variableCount);
-		//	if (strcmp(variableTable[i],lookahead.attribute.idLexeme)==0) {
-		//		found = 1;
-		//		break;
-		//	}
-		//}
-		//if (!found) {
+		for (size_t i = 0; i < variableCount; i++)
+		{
+			//printf("variableTable is: %s\nlookahead.attribute.idLexeme is: %s\nCurrent count is: %d\n", variableTable[i], lookahead.attribute.idLexeme,variableCount);
+			if (strcmp(variableTable[i],lookahead.attribute.idLexeme)==0) {
+				found = 1;
+				break;
+			}
+		}
+		if (!found) {
 			varListDeclaration();
 			varListDeclarationsPrime();
-		//}
+		}
 		//printf("idLexeme is %s\n",lookahead.attribute.idLexeme);
 		break;
 
@@ -420,6 +419,7 @@ oslo_null statement() {
 		break;
 	case VID_T:
 		matchToken(VID_T, NO_ATTR);
+		printf("%s%s\n", STR_LANGNAME, ": Variable identifier parsed");
 		if (lookahead.code == ASS_OP_T) {
 			matchToken(ASS_OP_T, NO_ATTR);
 			assignmentStatement();
@@ -434,59 +434,6 @@ oslo_null statement() {
 			assignmentStatement();
 		}
 		break;
-		//switch (lookahead.code)
-		//{
-		//case LS_T:
-		//	matchToken(LS_T, NO_ATTR);
-		//	break;
-		//case KW_T:
-		//	if (lookahead.attribute.codeType == 17)
-		//	{
-		//		matchToken(KW_T, NO_ATTR);
-		//		if (lookahead.code == LPR_T)
-		//		{
-		//			matchToken(LPR_T, NO_ATTR);
-		//			//I can add if string is inside input()
-		//			if (lookahead.code == MNID_T) {
-		//				if (strncmp(lookahead.attribute.idLexeme, "input", 5) == 0) {
-		//					matchToken(MNID_T, NO_ATTR);
-		//					if (lookahead.code == LPR_T)
-		//						matchToken(LPR_T, NO_ATTR);
-		//					else
-		//						printError();
-		//					//variable inside input(<var>)
-		//					if (lookahead.code == VID_T)
-		//						matchToken(VID_T, NO_ATTR);
-		//					else if (lookahead.code == STR_T)
-		//						matchToken(STR_T, NO_ATTR);
-		//					if (lookahead.code == RPR_T)
-		//						matchToken(RPR_T, NO_ATTR);
-		//					else
-		//						printError();
-		//				}
-
-		//			}
-		//			if (lookahead.code == RPR_T)
-		//			{
-		//				matchToken(RPR_T, NO_ATTR);
-		//			}
-		//			else
-		//				printError();
-		//		}
-		//		else
-		//			printError();
-		//	break;
-		//	}
-		//default:
-		//	printError();
-		//	break;
-		//}
-		//if (lookahead.code == EOS_T)
-		//{
-		//	matchToken(EOS_T, NO_ATTR);
-		//	
-		//}
-		
 	default:
 		printError();
 	}
@@ -520,6 +467,8 @@ oslo_null assignmentStatement() {
 oslo_null assignmentExpression() {
 	Token temp;
 	switch (lookahead.code) {
+	case KW_T:
+		matchToken(KW_T, NO_ATTR);
 	case LPR_T:
 		matchToken(LPR_T, NO_ATTR);
 		switch (lookahead.code) {
@@ -538,7 +487,6 @@ oslo_null assignmentExpression() {
 				matchToken(MNID_T, NO_ATTR);
 				matchToken(LPR_T, NO_ATTR);
 				matchToken(RPR_T, NO_ATTR);
-									
 			}
 			break;
 		default:
@@ -572,15 +520,25 @@ oslo_null arithmeticExpression() {
 		case OP_SUB:
 			matchToken(ART_OP_T, OP_SUB);
 			break;
+		case OP_DIV:
+			matchToken(ART_OP_T, OP_DIV);
+			break;
+		case OP_MUL:
+			matchToken(ART_OP_T, OP_MUL);
+			break;
 		default:
 			printError();
 		}
 		primaryArithmeticExpression();
 		break;
+	case RPR_T:
+		matchToken(RPR_T, NO_ATTR);
 	case LPR_T:
 	case VID_T:
 	case LS_T:
 		additiveArithmeticExpression();
+		break;
+	case EOS_T:
 		break;
 	default:
 		printError();
@@ -590,7 +548,17 @@ oslo_null arithmeticExpression() {
 
 oslo_null primaryArithmeticExpression() {
 	switch (lookahead.code) {
+	case VID_T:
+		matchToken(VID_T, NO_ATTR);
+		if (lookahead.code != EOS_T)
+			arithmeticExpression();
+		break;
 	case LS_T:
+		matchToken(LS_T, NO_ATTR);
+		if(lookahead.code!=EOS_T)
+			arithmeticExpression();
+		break;
+	case LPR_T:
 		arithmeticExpression();
 		break;
 	default:
@@ -614,6 +582,12 @@ oslo_null additiveArithmeticExpressionPrime() {
 		case OP_SUB:
 			matchToken(ART_OP_T, OP_SUB);
 			break;
+		case OP_DIV:
+			matchToken(ART_OP_T, OP_DIV);
+			break;
+		case OP_MUL:
+			matchToken(ART_OP_T, OP_MUL);
+			break;
 		default:
 			;
 		}
@@ -623,9 +597,12 @@ oslo_null additiveArithmeticExpressionPrime() {
 oslo_null multiplicativeArithmeticExpression() {
 	switch (lookahead.code) {
 	case LPR_T:
+		matchToken(LPR_T, NO_ATTR);
 	case VID_T:
 	case LS_T:
 		primaryArithmeticExpression();
+		break;
+	case EOS_T:
 		break;
 	default:
 		printError();
@@ -711,6 +688,8 @@ oslo_null outputVariableList() {
 		matchToken(STR_T, NO_ATTR);
 		//printf("%s\n", "SOFIA: Output list (string literal) parsed");
 		break;
+	case VID_T:
+		matchToken(VID_T, NO_ATTR);
 	default:
 		//printf("%s\n", "SOFIA: Output list (empty) parsed");
 		;
