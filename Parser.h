@@ -48,7 +48,7 @@ extern oslo_char* keywordTable[];
 oslo_char variableTable[100][100];
 oslo_int variableCount = 0;
 
-#define STR_LANGNAME "Oslo"
+#define STR_LANGNAME "OSLO"
 
 /* TO_DO: Create ALL constants for keywords (sequence given in table.h) */
 
