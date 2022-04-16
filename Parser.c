@@ -71,6 +71,7 @@ oslo_null matchToken(oslo_int tokenCode, oslo_int tokenAttribute) {
 	if (matchFlag && lookahead.code == SEOF_T)
 		return;
 	if (matchFlag) {
+		printf("matched lookhead.code: %d\n", lookahead.code);
 		lookahead = tokenizer();
 		if (lookahead.code == ERR_T) {
 			printError();
@@ -292,18 +293,18 @@ oslo_null varListDeclarationsPrime() {
 	oslo_int found = 0;
 	switch (lookahead.code) {
 	case VID_T:
-		for (size_t i = 0; i < variableCount; i++)
-		{
-			//printf("variableTable is: %s\nlookahead.attribute.idLexeme is: %s\nCurrent count is: %d\n", variableTable[i], lookahead.attribute.idLexeme,variableCount);
-			if (strcmp(variableTable[i],lookahead.attribute.idLexeme)==0) {
-				found = 1;
-				break;
-			}
-		}
-		if (!found) {
+		//for (size_t i = 0; i < variableCount; i++)
+		//{
+		//	//printf("variableTable is: %s\nlookahead.attribute.idLexeme is: %s\nCurrent count is: %d\n", variableTable[i], lookahead.attribute.idLexeme,variableCount);
+		//	if (strcmp(variableTable[i],lookahead.attribute.idLexeme)==0) {
+		//		found = 1;
+		//		break;
+		//	}
+		//}
+		//if (!found) {
 			varListDeclaration();
 			varListDeclarationsPrime();
-		}
+		//}
 		//printf("idLexeme is %s\n",lookahead.attribute.idLexeme);
 		break;
 
@@ -406,12 +407,12 @@ oslo_null statementsPrime() {
  */
 oslo_null statement() {
 	switch (lookahead.code) {
-	case KW_T:
+	/*case KW_T:
 		switch (lookahead.attribute.codeType) {
 		default:
 			printError();
 		}
-		break;
+		break;*/
 	case MNID_T:
 		if (strncmp(lookahead.attribute.idLexeme, "print", 5) == 0) {
 		outputStatement();
@@ -419,53 +420,73 @@ oslo_null statement() {
 		break;
 	case VID_T:
 		matchToken(VID_T, NO_ATTR);
-		matchToken(ASS_OP_T, NO_ATTR);
-		if (lookahead.code == LS_T) {
-			matchToken(LS_T, NO_ATTR);
+		if (lookahead.code == ASS_OP_T) {
+			matchToken(ASS_OP_T, NO_ATTR);
+			assignmentStatement();
 		}
-		//else if (lookahead.code==KW_T)
+		else {
+			printError();
+		}
+		break;
+	case KW_T:
+		if (lookahead.code == KW_T) {
+			matchToken(KW_T, NO_ATTR);
+			assignmentStatement();
+		}
+		break;
+		//switch (lookahead.code)
 		//{
+		//case LS_T:
+		//	matchToken(LS_T, NO_ATTR);
+		//	break;
+		//case KW_T:
 		//	if (lookahead.attribute.codeType == 17)
 		//	{
 		//		matchToken(KW_T, NO_ATTR);
 		//		if (lookahead.code == LPR_T)
 		//		{
 		//			matchToken(LPR_T, NO_ATTR);
-		//		}else
-		//			printError();
-		//		if (lookahead.code == MNID_T) {//THIS SHIFT IS NOT WORKING
-		//			if (strncmp(lookahead.attribute.idLexeme, "input", 5) == 0)
-		//				matchToken(MNID_T, NO_ATTR);
-		//			else
-		//				printError();
-		//			/*if (lookahead.code == LPR_T) {
-		//				matchToken(LPR_T, NO_ATTR);
+		//			//I can add if string is inside input()
+		//			if (lookahead.code == MNID_T) {
+		//				if (strncmp(lookahead.attribute.idLexeme, "input", 5) == 0) {
+		//					matchToken(MNID_T, NO_ATTR);
+		//					if (lookahead.code == LPR_T)
+		//						matchToken(LPR_T, NO_ATTR);
+		//					else
+		//						printError();
+		//					//variable inside input(<var>)
+		//					if (lookahead.code == VID_T)
+		//						matchToken(VID_T, NO_ATTR);
+		//					else if (lookahead.code == STR_T)
+		//						matchToken(STR_T, NO_ATTR);
+		//					if (lookahead.code == RPR_T)
+		//						matchToken(RPR_T, NO_ATTR);
+		//					else
+		//						printError();
+		//				}
+
 		//			}
-		//			else
-		//				printError();
-		//			if (lookahead.code == RPR_T) {
-		//				matchToken(RPR_T, NO_ATTR);
-		//			}
-		//			else
-		//				printError();
-		//			if (lookahead.code == RPR_T) {
-		//				matchToken(RPR_T, NO_ATTR);
-		//			}
-		//			else
-		//				printError();
-		//			if (lookahead.code == EOS_T)
+		//			if (lookahead.code == RPR_T)
 		//			{
-		//				matchToken(EOS_T, NO_ATTR);
-		//			}*/
-
-
+		//				matchToken(RPR_T, NO_ATTR);
+		//			}
+		//			else
+		//				printError();
 		//		}
-		//		
-		//		break;
+		//		else
+		//			printError();
+		//	break;
 		//	}
-		//}else
+		//default:
 		//	printError();
-		break;
+		//	break;
+		//}
+		//if (lookahead.code == EOS_T)
+		//{
+		//	matchToken(EOS_T, NO_ATTR);
+		//	
+		//}
+		
 	default:
 		printError();
 	}
@@ -497,10 +518,44 @@ oslo_null assignmentStatement() {
  ***********************************************************
  */
 oslo_null assignmentExpression() {
+	Token temp;
 	switch (lookahead.code) {
+	case LPR_T:
+		matchToken(LPR_T, NO_ATTR);
+		switch (lookahead.code) {
+		case VID_T:
+			arithmeticExpression();
+			stringExpression();
+			break;
+		case LS_T:
+			arithmeticExpression();
+			break;
+		case STR_T:
+			stringExpression();
+			break;
+		case MNID_T:
+			if (strncmp(lookahead.attribute.idLexeme, "input", 5) == 0) {
+				matchToken(MNID_T, NO_ATTR);
+				matchToken(LPR_T, NO_ATTR);
+				matchToken(RPR_T, NO_ATTR);
+									
+			}
+			break;
+		default:
+			printError();
+		}
+		matchToken(RPR_T, NO_ATTR);
+		break;
 	case VID_T:
 		arithmeticExpression();
 		stringExpression();
+		break;
+	case LS_T:
+		arithmeticExpression();
+		break;
+	case STR_T:
+		stringExpression();
+		break;
 	default:
 		printError();
 	}
