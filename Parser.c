@@ -251,7 +251,7 @@ oslo_null varListDeclarations() {
 oslo_null varListDeclaration() {
 	switch (lookahead.code) {
 	case VID_T:
-		strcpy(variableTable[variableCount], lookahead.attribute.idLexeme);
+		strcpy_s(variableTable[variableCount], sizeof(variableTable[variableCount]), lookahead.attribute.idLexeme);
 		variableCount++;
 		matchToken(VID_T, NO_ATTR);
 	case ASS_OP_T:
@@ -449,7 +449,6 @@ oslo_null assignmentStatement() {
  ***********************************************************
  */
 oslo_null assignmentExpression() {
-	Token temp;
 	switch (lookahead.code) {
 	case KW_T:
 		matchToken(KW_T, NO_ATTR);
